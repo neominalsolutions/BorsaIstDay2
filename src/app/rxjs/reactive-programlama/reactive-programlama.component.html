@@ -1,1 +1,11 @@
 <p>reactive-programlama works!</p>
+
+<!-- observable olan tipteki değerleri ekranda gösterebilmemize olanak sağlayn bir veri tranformation yöntemi -->
+<ul>
+  <li *ngFor="let todo of data$ | async">
+    {{todo.title}}
+  </li>
+</ul>
+
+
+<button (click)="onLoadTodos()">onLoadTodos</button>

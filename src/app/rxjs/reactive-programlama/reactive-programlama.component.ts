@@ -11,6 +11,7 @@ import {
   interval,
   map,
   merge,
+  Observable,
   of,
   Subscription,
   switchMap,
@@ -21,14 +22,22 @@ import {
 } from 'rxjs';
 
 import { ajax } from 'rxjs/ajax';
+import {
+  ITodo,
+  TodoServiceService,
+} from 'src/app/services/todo-service.service';
 
 @Component({
   selector: 'app-reactive-programlama',
   templateUrl: './reactive-programlama.component.html',
   styleUrls: ['./reactive-programlama.component.css'],
+  // providers: [TodoServiceService], // transient bir service instance, component bazlı service instance yöntemi
 })
 export class ReactiveProgramlamaComponent implements OnInit, OnDestroy {
   apiSubs!: Subscription;
+  data$!: Observable<ITodo[]>; // Observable olan tipleri ayırmak için değişken sonuna $ ifadesi konulması kabul görmüş bir yöntemdir.
+
+  constructor(private todoService: TodoServiceService) {}
 
   ngOnInit(): void {
     // reactive programlama senkron hemde asenkron durumlar içinde çalışır.
@@ -155,6 +164,23 @@ export class ReactiveProgramlamaComponent implements OnInit, OnDestroy {
       });
 
     // buda farkı apidan gelen responseları tek bir api üzeride birleştirip göstermemiz sağlayan bir yöntem
+  }
+
+  onLoadTodos() {
+    this.data$ = this.todoService.getTodos();
+    // subscribe yapmaya gerek kalmayan yöntem.
+
+    this.todoService.getTodos().subscribe({
+      next: (data) => {
+        // eğer ki data üzerinde bir veri çektikten sonra bir işlem olabilir.
+        // notification atma, alert verme, bir kayıt güncelleme
+        // subscribe böyle yazılabilir.
+        // eğer ki direkt olarak veriyi arayüzde kullanacak isek bu durumda observabletipte tanımlayı arayüzden | async operatör ile çağırabiliriz.
+        console.log('load-data-from-service', data);
+      },
+      error: (err) => {},
+      complete: () => {},
+    });
   }
 
   ngOnDestroy(): void {
