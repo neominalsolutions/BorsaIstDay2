@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CounterStateService } from './subjects/counter-state-service.service';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   title = 'HttpClientApps';
+
+  constructor(public counterState: CounterStateService) {}
 
   // await için async function ile çalışmamız lazım
   async ngOnInit() {
